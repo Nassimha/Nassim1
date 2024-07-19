@@ -3,15 +3,27 @@ import os
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.chrome.service import Service as ChromeService
+from webdriver_manager.chrome import ChromeDriverManager
 
 def fetch_gig_details(gig_url):
-    # استخدام requests و BeautifulSoup لجلب تفاصيل gig
-    # ...
+    # استبدل هذا التعليق بالكود الفعلي لجلب تفاصيل gig
+    title = "عنوان مثال"
+    description = "وصف مثال"
+    tags = "علامة1, علامة2"
+    return title, description, tags
 
 def analyze_content(title, description, tags):
-    # تحليل محتوى gig
-    # ...
-    return recommendations
+    keywords = []
+    
+    if "تصميم" in title:
+        keywords.append("خدمات تصميم")
+    if "SEO" in description:
+        keywords.append("تحسين محركات البحث")
+    if "إعلانات" in tags:
+        keywords.append("إعلانات عبر الإنترنت")
+    
+    return ', '.join(keywords)
 
 def update_gig_keywords(driver, gig_url, new_keywords):
     driver.get(gig_url)
@@ -52,20 +64,17 @@ def login(driver):
     time.sleep(5)
 
 def main():
-    gig_url = 'https://www.fiverr.com/s/99N62Yd'  # استبدل بعنوان gig الخاص بك
+    gig_url = 'https://www.fiverr.com/s/DB5P21X'  # استبدل بعنوان gig الخاص بك
     title, description, tags = fetch_gig_details(gig_url)
     recommendations = analyze_content(title, description, tags)
 
-    # قائمة بالكلمات المفتاحية الجديدة (مثال)
-    new_keywords = "keyword1, keyword2, keyword3"
-
     print("توصيات تحسين SEO:")
-    for rec in recommendations:
+    for rec in recommendations.split(', '):
         print(f"- {rec}")
 
     # تحديث الكلمات المفتاحية
-    driver = webdriver.Chrome()  # تأكد من إعداد ChromeDriver بشكل صحيح
-    update_gig_keywords(driver, gig_url, new_keywords)
+    driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))  # تأكد من إعداد ChromeDriver بشكل صحيح
+    update_gig_keywords(driver, gig_url, recommendations)
     driver.quit()
 
 if __name__ == "__main__":
