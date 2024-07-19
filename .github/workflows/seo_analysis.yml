@@ -1,0 +1,28 @@
+name: SEO Analysis
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # تشغيل البوت يوميًا في منتصف الليل
+  push:
+    branches:
+      - main  # تشغيل الـ Workflow عند الدفع إلى الفرع الرئيسي
+
+jobs:
+  seo:
+    runs-on: ubuntu-latest  # البيئة التي سيتم تشغيل الـ Job عليها
+    steps:
+    - uses: actions/checkout@v2  # خطوة لنسخ الكود من المستودع
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8  # تحديد إصدار Python
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        sudo apt-get install -y chromium-browser  # تثبيت المتصفح اللازم لتشغيل Selenium
+    - name: Run SEO bot
+      env:
+        FIVERR_USERNAME: ${{ secrets.FIVERR_USERNAME }}
+        FIVERR_PASSWORD: ${{ secrets.FIVERR_PASSWORD }}
+      run: python seo_bot.py  # تشغيل السكربت
